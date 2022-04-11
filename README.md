@@ -4,5 +4,3 @@ This program reads structure file having direction along [-110], [-101], and [11
 
 ## Usage
 `python3 stacking_alloy.py`
-
-
