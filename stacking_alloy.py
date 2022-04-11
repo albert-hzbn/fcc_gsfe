@@ -7,13 +7,13 @@ import math
 
 len_stacking = int(input("Enter number of layers: "))
 
-inpLRange = input(
-    "Enter range of layers you want ot shift for isf (e.g. entering 6-9 shifts layer from 6 to 9): ")
-sI, eI = inpLRange.split('-')
-sI, eI = int(sI), int(eI)
+input_range = input(
+    "Enter range of top layer you want ot shift for isf (e.g. entering 6-9 shifts layer from 6 to 9): ")
+s_i, eI = input_range.split('-')
+s_i, eI = int(s_i)-1, int(eI)
 
 max_shift = int(
-    input("Enter maximum n(whole number) to shift by magnitude n*bTwin: "))
+    input("Enter maximum n(whole number) to shift by magnitude n*b_twin: "))
 
 
 # Reading ideal disordered POSCAR file
@@ -47,11 +47,11 @@ c1, c2, c3 = list(map(lambda x: float(x), data[4].split()))
 # Converts data to POSCAR
 def convert_to_poscar(data, atoms_arr, current_shift):
 
-    shiftX = current_shift*math.cos(30*math.pi/180)
-    shiftY = current_shift*math.sin(30*math.pi/180)
+    shift_x = current_shift*math.cos(30*math.pi/180)
+    shift_y = current_shift*math.sin(30*math.pi/180)
 
     # For shifting lattice vectors
-    c1, c2 = shiftX, shiftY
+    c1, c2 = shift_x, shift_y
 
     symbol_str = ' '.join([str(elem) for elem in elem_arr])
     num_atoms_str = ' '.join([str(n) for n in num_atoms_arr])
@@ -89,14 +89,14 @@ def save_to_file(f_name, data):
 
 
 # Magnitude of burger vector
-bTwin = 1/math.sqrt(6)
+b_twin = 1/math.sqrt(6)
 
 # minimum  shift
-shift = 0.1*bTwin
+shift = 0.1*b_twin
 
 # Minimum shift in x and y direction
-shiftX = shift*math.cos(30*math.pi/180)
-shiftY = shift*math.sin(30*math.pi/180)
+shift_x = shift*math.cos(30*math.pi/180)
+shift_y = shift*math.sin(30*math.pi/180)
 
 num_atoms_layer = int(atoms/len_stacking)
 
@@ -106,13 +106,13 @@ for ind in range(0, max_shift):
         for layer in range(0, len_stacking):
 
             # Condition for range of layers to be shifted
-            if((layer+1) >= (sI+ind) and (layer+1) <= eI):
+            if((layer+1) >= (s_i+ind) and (layer+1) <= eI):
                 li = num_atoms_layer*layer
                 ri = num_atoms_layer*(layer+1)
                 for i in range(li, ri):
-                    atoms_arr[i][1] += shiftX
-                    atoms_arr[i][2] += shiftY
+                    atoms_arr[i][1] += shift_x
+                    atoms_arr[i][2] += shift_y
 
-        current_shift = ((f+1)+ind*10)/10*bTwin
+        current_shift = ((f+1)+ind*10)/10*b_twin
         new_data = convert_to_poscar(data, atoms_arr, current_shift)
         save_to_file("POSCAR_"+str((f+1)+ind*10), new_data)
